@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 rm(list = ls())
 ```
 
-```{r load_libraries, warning=FALSE, message=FALSE}
+```{r load_libraries_Q1, warning=FALSE, message=FALSE}
 library(tidyverse)
 ```
 
@@ -36,6 +36,9 @@ library(tidyverse)
 ## disagree or completely agree, once the missing values are excluded.
 
 ```{r}
+#First make the vector containing all the answers to the question
+survey_answer <- c(NA, 3, 4, 4, 5, 2, 4, NA, 6, 3, 5, 4, 0, 5, 7, 5, NA, 5, 2, 4, NA, 3, 3, 5, NA)
+
 #Before doing anything you must remove NA values from the vector
 survey_answer = survey_answer[
   !is.na(survey_answer)]
@@ -68,7 +71,7 @@ which(survey_answer %in% c(5,6,7))
 
 ##**Question 2.1:** Install the library palmerpenguins.
   
-```{r load_libraries, warning=FALSE, message=FALSE}
+```{r load_libraries_Q2, warning=FALSE, message=FALSE}
 library(palmerpenguins)
 library(dplyr)
 library(tidyverse)
