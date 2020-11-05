@@ -126,6 +126,23 @@ pengtable %>%
 
 
 
+#Question 3
+
+
+##**Question 3.1:**write the code necessary to load the data from covid19_cases_20200301_20201017.csv to
+##a variable named covid_data.
+
+###the code line below doesn't work in rserver.
+###I uploaded the file using the upload button in the files tab.
+###read_csv("C:Users/mirif/OneDrive/Desktop/MASTERS/R/covid19_cases_20200301_20201017.csv")
+
+```{r load_libraries, warning=FALSE, message=FALSE}
+#Using this code i can import the uploaded dataset and call it covid_data
+library(readr)
+
+covid_data <- read_csv("covid19_cases_20200301_20201017.csv")
+View(covid_data)
+```
 
 
 
