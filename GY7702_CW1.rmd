@@ -12,22 +12,117 @@ rm(list = ls())
 
 ```{r load_libraries, warning=FALSE, message=FALSE}
 library(tidyverse)
+```
 
+#Question 1:
+
+
+##Create the vector of 25 numbers between 1 and 7 listed below, using the function c. Assume those values
+##represent the answers to a survey question, following the scale presented further below.
+
+## [1] NA 3 4 4 5 2 4 NA 6 3 5 4 0 5 7 5 NA 5 2 4 NA 3 3 5 NA
+
+## 1 = completely disagree
+## 2 = disagree
+## 3 = somehow disagree
+## 4 = neither agree nor disagree
+## 5 = somehow agree
+## 6 = agree
+## 7 = completely agree
+## NA = missing value
+
+
+##**Question 1.1:** write the code necessary to check whether all participants to the survey either completely
+## disagree or completely agree, once the missing values are excluded.
+
+```{r}
+#Before doing anything you must remove NA values from the vector
+survey_answer = survey_answer[
+  !is.na(survey_answer)]
+
+#1 = completely disagree so this asks the vector if all values are equal to 1.
+print(paste(
+  "Do all participants completely disagree?", all(survey_answer == 1)
+  ))
+
+#7 = completely agree, same as above.
+print(paste(
+  "Do all participants completely agree?", all(survey_answer == 7)
+  ))
 ```
 
 
 
+##**Question 1.2:** write the code necessary to extract the indexes related to the participants in the survey who
+##at least somehow agree or more.
+
+```{r}
+#the which function used to extract 5, 6 and 7 (in the vector c) out of the survey_answer vetor
+which(survey_answer %in% c(5,6,7))
+```
 
 
 
+#Question 2:
+
+
+##**Question 2.1:** Install the library palmerpenguins.
+  
+```{r load_libraries, warning=FALSE, message=FALSE}
+library(palmerpenguins)
+library(dplyr)
+library(tidyverse)
+
+pengtable <- palmerpenguins::penguins
+```
 
 
 
+##**Question 2.2:** write the code necessary to create a table showing species, island, bill length and body mass
+##of the 10 Gentoo penguins in the penguins table with the highest body mass.
+  
+```{r}
+pengtable %>%
+  dplyr::select(species, island, bill_length_mm, body_mass_g) %>%
+  dplyr::filter(species == "Gentoo") %>%
+  dplyr::slice_max(body_mass_g, n = 10)
+```
 
 
 
+##**Question 2.3:** write the code necessary to create a table showing the average bill length per island, ordered
+##by average bill length.
+  
+```{r}
+ pengtable %>%
+  dplyr::select(bill_length_mm, island) %>% 
+  dplyr::group_by(island) %>%
+  dplyr::mutate(
+    avg_bill_length_mm = mean(bill_length_mm)
+  ) %>%
+  dplyr::arrange(avg_bill_length_mm)
+```
 
 
+
+##**Question 2.4:** write the code necessary to create a table showing the minimum, median and maximum
+##proportion between bill length and bill depth by species.
+  
+```{r}
+pengtable %>%
+    na.omit(pengtable) %>%
+    dplyr::select(bill_length_mm, bill_depth_mm, species) %>%
+    dplyr::mutate(
+      min_proportion = min(bill_length_mm) / min(bill_depth_mm)
+    ) %>%
+    dplyr::mutate(
+      med_proportion = median(bill_length_mm) / median(bill_depth_mm)
+    ) %>%
+    dplyr::mutate(
+      max_proportion = max(bill_length_mm) / max(bill_depth_mm)
+    ) %>%
+    dplyr::group_by(species)
+```
 
 
 
