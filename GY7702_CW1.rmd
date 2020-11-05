@@ -1,0 +1,54 @@
+---
+title: "GY7702 CW1"
+author: "Jacob Embery"
+date: "05/11/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+rm(list = ls())
+```
+
+```{r load_libraries, warning=FALSE, message=FALSE}
+library(tidyverse)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r include=FALSE}
+rm(list = ls())
+```
+
