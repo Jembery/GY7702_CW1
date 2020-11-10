@@ -54,7 +54,6 @@ print(paste(
 ```
 
 
-
 ##**Question 1.2:** write the code necessary to extract the indexes related to the participants in the survey who at least somehow agree or more.
 
 ```{r}
@@ -102,8 +101,8 @@ pengtable %>%
   dplyr::select(bill_length_mm, island) %>% #select the variables required out of pengtable
   dplyr::group_by(island) %>% #group the coloumns by island
   dplyr::summarise(
-    avg_bill_length_mm = mean(bill_length_mm) #create a new column and calculate average bill length per island
-    ) %>%
+    avg_bill_length_mm = mean(bill_length_mm), .groups = 'keep'  #create a new column and calculate average bill length per island
+    ) %>% #.groups = 'keep' keeps the same grouping after the summarise and stops any friendly errors in console
   dplyr::arrange(avg_bill_length_mm) #arrange in accending avg_bill_length_mm
 ```
 
@@ -113,19 +112,22 @@ pengtable %>%
   
 ```{r}
 pengtable %>%
-    na.omit(pengtable) %>%
-    dplyr::select(bill_length_mm, bill_depth_mm, species) %>%
-    dplyr::group_by(species) %>%
+    na.omit(pengtable) %>% #remove na values
+    dplyr::select(bill_length_mm, bill_depth_mm, species) %>% #select the variables required out of pengtable
+    dplyr::group_by(species) %>% #group columns by species
     dplyr::mutate(
-      min_proportion = min(bill_length_mm) / min(bill_depth_mm)
+      min_proportion = min(bill_length_mm) / min(bill_depth_mm) #create new column for minimum proportion
     ) %>%
     dplyr::mutate(
-      med_proportion = median(bill_length_mm) / median(bill_depth_mm)
+      med_proportion = median(bill_length_mm) / median(bill_depth_mm) #create new column for median proportion
     ) %>%
     dplyr::mutate(
-      max_proportion = max(bill_length_mm) / max(bill_depth_mm)
-    )
-   
+      max_proportion = max(bill_length_mm) / max(bill_depth_mm) #create new column for maximum proportion
+    ) %>% 
+    dplyr::summarise(
+      min_proportion, med_proportion, max_proportion, .groups = 'keep' #remove bill length and depth from the table
+    ) %>% #.groups = 'keep' keeps the same grouping after the summarise and stops any friendly errors in console
+    dplyr::slice_head(n = 1) # remove rows with repeated data, only 1 row per species
 ```
 
 
@@ -140,11 +142,11 @@ pengtable %>%
 ###read_csv("C:Users/mirif/OneDrive/Desktop/MASTERS/R/covid19_cases_20200301_20201017.csv")
 
 ```{r load_libraries, warning=FALSE, message=FALSE}
-#Using this code i can import the uploaded dataset and call it covid_data
-library(readr)
+library(readr) # load readr library
 
-covid_data <- read_csv("covid19_cases_20200301_20201017.csv")
-#View(covid_data)
+covid_data <- read_csv("covid19_cases_20200301_20201017.csv") #Using this code i can import the uploaded dataset and call it covid_data
+
+#View(covid_data) #view(data) has been commented out as errors occur when trying to knit
 
 ```
 
