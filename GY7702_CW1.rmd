@@ -4,6 +4,7 @@ author: "Jacob Embery"
 date: "05/11/2020"
 output: pdf_document
 ---
+#GY7702 Assignment 1
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -72,7 +73,7 @@ which(survey_answer %in% c(5,6,7))
 
 #install.packages("palmerpenguins")
 pengtable <- palmerpenguins::penguins #create a variable for the table of data to be called from
-#View(pengtable)
+View(pengtable)
 
 library(palmerpenguins) #install palmer penguins library 
 library(dplyr) #install dplyr library
@@ -85,8 +86,8 @@ library(tidyverse) #install tidyverse library
   
 ```{r}
 pengtable %>%
-  na.omit(pengtable) %>% #remove na values
   dplyr::select(species, island, bill_length_mm, body_mass_g) %>% #select the variables required out of pengtable
+  na.omit(pengtable) %>% #remove na values
   dplyr::filter(species == "Gentoo") %>% #filter so only work with the species "Gentoo" 
   dplyr::slice_max(body_mass_g, n = 10) #display the top 10 values for body mass
 ```
@@ -97,8 +98,8 @@ pengtable %>%
   
 ```{r}
  pengtable %>%
-  na.omit(pengtable) %>% #remove na values
   dplyr::select(bill_length_mm, island) %>% #select the variables required out of pengtable
+  na.omit(pengtable) %>% #remove na values
   dplyr::group_by(island) %>% #group the coloumns by island
   dplyr::summarise(
     avg_bill_length_mm = mean(bill_length_mm), .groups = 'keep'  #create a new column and calculate average bill length per island
@@ -112,27 +113,27 @@ pengtable %>%
   
 ```{r}
 pengtable %>%
-    na.omit(pengtable) %>% #remove na values
     dplyr::select(bill_length_mm, bill_depth_mm, species) %>% #select the variables required out of pengtable
+    na.omit(pengtable) %>% #remove na values
     dplyr::group_by(species) %>% #group columns by species
     dplyr::mutate(
-      min_proportion = min(bill_length_mm) / min(bill_depth_mm) #create new column for minimum proportion
-    ) %>%
-    dplyr::mutate(
-      med_proportion = median(bill_length_mm) / median(bill_depth_mm) #create new column for median proportion
-    ) %>%
-    dplyr::mutate(
-      max_proportion = max(bill_length_mm) / max(bill_depth_mm) #create new column for maximum proportion
-    ) %>% 
+      bill_proportion = bill_length_mm / bill_depth_mm #create new column for minimum proportion
+      ) %>%
     dplyr::summarise(
-      min_proportion, med_proportion, max_proportion, .groups = 'keep' #remove bill length and depth from the table
-    ) %>% #.groups = 'keep' keeps the same grouping after the summarise and stops any friendly errors in console
+      min_proportion = min(bill_proportion), #create new column for minimum proportion
+      med_proportion = median(bill_proportion), #create new column for median proportion
+      max_proportion = max(bill_proportion), #create new column for maximum proportion
+      .groups = 'keep' #.groups = 'keep' keeps the same grouping after the summarise and stops any friendly errors in console
+    ) %>% 
     dplyr::slice_head(n = 1) # remove rows with repeated data, only 1 row per species
 ```
 
 
 
 #Question 3
+
+##Download the file covid19_cases_20200301_20201017.csv from BlackBoard, which contains a table detailing the number of new and cumulative covid-19 cases in the UK between March 1st and October 17th,
+##2020, according to the official Government statistics.
 
 
 ##**Question 3.1:**write the code necessary to load the data from covid19_cases_20200301_20201017.csv to a variable named covid_data.
@@ -146,13 +147,35 @@ library(readr) # load readr library
 
 covid_data <- read_csv("covid19_cases_20200301_20201017.csv") #Using this code i can import the uploaded dataset and call it covid_data
 
-#View(covid_data) #view(data) has been commented out as errors occur when trying to knit
+View(covid_data) #view(data) has been commented out as errors occur when trying to knit for R Markdown
 
 ```
 
 
 
+##**Question 3.2** write the code necessary to:
+###Create a complete table, containing a row for each day and area.
+###Replace NA values with the value available for the previous date.
+###Replace the remaining NA values (those that don’t have a previous value available) with zero.
+###Subset only the area assigned to your student ID in the table in the appendix.
+###Drop the area_name column.
+###Store the resulting table in a variable named [area]_complete_covid_data (substituting [area] in the name of the variable with the name of the area assigned to you).
 
+```{r}
+library(tidyr)
+library(dplyr)
+
+brentwood_covid_data <-
+covid_data %>%
+  tidyr::complete(specimen_date, area_name) %>%
+  dplyr::group_by(area_name) %>%
+  dplyr::arrange(specimen_date) %>%
+  tidyr::fill(newCasesBySpecimenDate, cumCasesBySpecimenDate) %>%
+  tidyr::replace_na(list(newCasesBySpecimenDate = 0)) %>%
+  tidyr::replace_na(list(cumCasesBySpecimenDate = 0)) %>%
+  dplyr::filter(area_name == "Brentwood") %>%
+  subset(select = -c(area_name))
+```
 
 
 
