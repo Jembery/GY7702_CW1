@@ -6,7 +6,7 @@ output: pdf_document
 ---
 #*GY7702 Assignment 1*
 
-##*This document was written in R MarkDown and knitted using the 'knit' function to create a pdf. I regularly saved and updated the file data to GitHub using the Commit and Push commands in Rserver.* 
+##*This document was written in R MarkDown using rserver and knitted using the 'knit' function to create a pdf. I regularly saved and updated the file data to GitHub using the Commit and Push commands in Rserver.* 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -108,6 +108,7 @@ pengtable %>%
   dplyr::filter(species == "Gentoo") %>% 
   #display the top 10 values for body mass
   dplyr::slice_max(body_mass_g, n = 10) %>%
+  #improve table format
   kable()
 ```
 
@@ -133,6 +134,7 @@ pengtable %>%
     ) %>% 
   #arrange in accending avg_bill_length_mm
   dplyr::arrange(avg_bill_length_mm) %>%
+  #improve table format
   kable()
 ```
 
@@ -167,6 +169,7 @@ pengtable %>%
     ) %>% 
   #remove rows with repeated data, only 1 row per species
     dplyr::slice_head(n = 1) %>%
+  #improve table format
     kable()
 ```
 
@@ -178,7 +181,7 @@ pengtable %>%
 
 
 
-##**Question 3.1:**Write the code necessary to load the data from covid19_cases_20200301_20201017.csv to a variable named covid_data.
+##**Question 3.1:**Write the code necessary to load the data from covid19_cases 20200301_20201017.csv to a variable named covid_data.
 
 ###The code line below doesn't work in rserver.
 ###read_csv("Drive:Filelocation/Filename.csv")
@@ -231,8 +234,9 @@ covid_data %>%
   #select and created a new table for area_name = "Brentwood", so area name column no
   #longer needed and is dropped.
   subset(select = -c(area_name))
-
+#display first five rows of the table
 slice_head(brentwood_complete_covid_data, n = 5) %>%
+#improve table format
 kable()
 ```
 
@@ -278,21 +282,37 @@ brentwood_complete_covid_data %>%
 #brentwood_complete_covid_date
 dplyr::left_join(
   brentwood_day_before,
+  #make specimen_date column equal to day_to_match column
   by = c("specimen_date" = "day_to_match")
 ) %>%
+#create new column for percentage of the number of new cases of the day before
 dplyr::mutate(
   percentage = ((newCasesBySpecimenDate /  newCases_day_before) * 100)
 )
-brentwood_covid_development$percentage[is.infinite(brentwood_covid_development$percentage)] <- NaN
+#remove infinite values from the percentage column in the brentwood_covid_development
+#table and change them to NaN
+brentwood_covid_development$percentage[is.infinite(
+  brentwood_covid_development$percentage)]<- NaN
+
+#shorten column names so they fit within the pdf margins when knitted
+colnames(
+  brentwood_covid_development) = c("specimen_date", "newCases",
+                                   "cumCases", "newCases_day_before", "percentage")
+
+#display first five rows of the table
 slice_head(brentwood_day_before, n = 5) %>%
+#improve table format
 kable()
+#display first five rows of the table
 slice_head(brentwood_covid_development, n = 5) %>%
+#improve table format
 kable()
 ```
 
 
 
 ##**Question 3.4:** Write a short text (max 150 words) describing the development of new cases in the area over time, as evidenced by the table [area]_covid_development.
+
 
 ![Figure 1: Line graph displaying new Brentwood case data from brentwood_covid_development table:](NewCasesBW.png)
 
@@ -321,9 +341,14 @@ pop_covid_data<-
     #join by area name
     by = c("area_name" = "lad19_area_name")
   )
-  colnames(pop_covid_data) = c("specimen_date", "area_name", "newCases", "cumCases", "area_code", "population")
-
-slice_head(pop_covid_data, n = 5)
+#shorten column names so they fit within the pdf margins when knitted
+  colnames(
+    pop_covid_data) = c("specimen_date", "area_name", "newCases", "cumCases",
+                        "area_code", "population")
+#display first five rows of the table
+slice_head(pop_covid_data, n = 5) %>%
+#improve table format
+kable()
 ```
 
 ###Analyse the data as you see fit. The end result should be one (max two) tables illustrating the spread of covid-19 in the area assigned to your student ID in the table in the appendix. For instance, the analysis could illustrate the development of cases over time, compared to the population, or it could illustrate a comparison with other areas in the region.
@@ -346,10 +371,14 @@ essex_covid_pop <-
  ) %>%
  #order in table by area name
  dplyr::arrange(area_name)
-
-colnames(essex_covid_pop) = c("specimen_date", "area_name", "newCases", "cumCases", "area_code", "population", "percent_pop_infected")
-
-dplyr::slice_head(essex_covid_pop, n = 5)
+#shorten column names so they fit within the pdf margins when knitted
+colnames(
+  essex_covid_pop) = c("specimen_date", "area_name", "newCases", "cumCases", "area_code",
+                       "population", "percent_pop_infected")
+#display first five rows of the table
+dplyr::slice_head(essex_covid_pop, n = 5) %>%
+#improve table format
+kable()
 ```
 
 ![Figure 2: Line graph displaying Essex cumulative case data from the essex_covid_pop table:](CumCasesEssex.png)
