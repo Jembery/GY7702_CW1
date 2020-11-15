@@ -8,6 +8,8 @@ output: pdf_document
 
 ##*This document was written in R MarkDown using rserver and knitted using the 'knit' function to create a pdf. I regularly saved and updated the file data to GitHub using the Commit and Push commands in Rserver.* 
 
+##Here is the link to my GitHub repository: https://github.com/Jembery/GY7702_CW1
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 rm(list = ls())
